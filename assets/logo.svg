@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="164" height="48" viewBox="0 0 164 48" role="img" aria-label="Mercora">
+  <rect x="2" y="2" width="44" height="44" rx="8" fill="#12315f"/>
+  <path d="M12 33V17l12 9 12-9v16" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="24" cy="26" r="3" fill="#48b8b0"/>
+  <text x="56" y="24" font-family="Inter, Segoe UI, Arial" font-size="20" font-weight="700" fill="#12315f">Mercora</text>
+  <text x="57" y="38" font-family="Inter, Segoe UI, Arial" font-size="9" font-weight="600" fill="#138a8a">COMMERCE INTELLIGENCE</text>
+</svg>
+

@@ -1,0 +1,27 @@
+{
+  "validated_at_utc": "2026-07-22T20:34:44.977748+00:00",
+  "status": "passed",
+  "checks": {
+    "orders_unique": true,
+    "items_unique": true,
+    "payments_unique": true,
+    "items_have_orders": true,
+    "payments_have_orders": true,
+    "order_mart_unique": true,
+    "item_revenue_reconciles": true,
+    "nonnegative_revenue": true,
+    "valid_analysis_dates": true,
+    "customer_hash_present": true,
+    "customer_hash_unique": true,
+    "historical_dates_bounded": true,
+    "critical_fields_present": true,
+    "no_sensitive_columns": true
+  },
+  "metrics": {
+    "orders": 99441,
+    "customers": 96096,
+    "item_revenue": 13591643.7,
+    "payments": 16008872.12,
+    "freight": 2251909.54
+  }
+}

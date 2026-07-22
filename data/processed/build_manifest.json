@@ -1,0 +1,14 @@
+{
+  "built_at_utc": "2026-07-16T23:52:57.307105+00:00",
+  "build_database": "D:\\projects\\retail-revenue-retention-analytics\\data\\processed\\commerce.duckdb",
+  "published_database": "D:\\projects\\retail-revenue-retention-analytics\\data\\processed\\commerce_app.duckdb",
+  "tables": {
+    "fact_orders": 99441,
+    "fact_order_items": 112650,
+    "fact_payments": 103886,
+    "mart_orders": 99441,
+    "mart_sales_lines": 112650,
+    "mart_customers": 94990,
+    "mart_cohorts": 219
+  }
+}
