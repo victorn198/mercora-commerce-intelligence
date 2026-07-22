@@ -3,13 +3,6 @@ from __future__ import annotations
 import os
 import pytest
 import tempfile
-from dash.testing.application_runners import ThreadedRunner
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as expected
-from selenium.webdriver.support.ui import WebDriverWait
 
 from application import create_dashboard
 from pipeline.config import Settings
@@ -21,6 +14,14 @@ from pipeline.config import Settings
     reason="Set RUN_BROWSER_E2E=1 on a host that permits headless Chrome sessions.",
 )
 def test_navigation_and_global_window_filter():
+    from dash.testing.application_runners import ThreadedRunner
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.chrome.service import Service
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support import expected_conditions as expected
+    from selenium.webdriver.support.ui import WebDriverWait
+
     dashboard = create_dashboard()
     runner = ThreadedRunner()
     runner.start(dashboard)
