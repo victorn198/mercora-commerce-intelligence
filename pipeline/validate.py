@@ -47,13 +47,20 @@ def run_validation(settings: Settings, fail_on_error: bool = True) -> dict:
             """
         ).fetchdf().to_dict("records")[0]
 
+    report_path = settings.processed_dir / "quality_report.json"
+    validated_at = datetime.now(timezone.utc).isoformat()
+    if report_path.exists():
+        previous = json.loads(report_path.read_text(encoding="utf-8"))
+        if previous.get("checks") == checks and previous.get("metrics") == metrics:
+            validated_at = previous.get("validated_at_utc", validated_at)
+
     report = {
-        "validated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "validated_at_utc": validated_at,
         "status": "passed" if all(checks.values()) else "failed",
         "checks": checks,
         "metrics": metrics,
     }
-    (settings.processed_dir / "quality_report.json").write_text(
+    report_path.write_text(
         json.dumps(report, indent=2, default=str), encoding="utf-8"
     )
     print(json.dumps(report, indent=2, default=str))
