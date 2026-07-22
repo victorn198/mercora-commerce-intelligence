@@ -1,57 +1,96 @@
-# Mercora Commerce Intelligence
+<p align="center">
+  <img src="assets/logo.svg" width="180" alt="Mercora Commerce Intelligence">
+</p>
 
-Aplicação interna de análise diária construída com os dados anonimizados do e-commerce brasileiro Olist. O case demonstra como transformar arquivos operacionais em um produto de decisão governado usando Python, SQL, DuckDB, Dash e Plotly.
+<h1 align="center">Mercora Commerce Intelligence</h1>
 
-**Demo pública:** [Mercora Commerce Intelligence](https://ba9ba428-78e2-4e6e-ac79-8a6dfe44fc99.plotly.app/)
+<p align="center">
+  Produto analítico para decisões de receita, retenção, entrega e confiança nos dados.
+</p>
 
-Interface disponível em português e inglês. Links diretos podem usar `?page=revenue&lang=en`.
-
-## Problema de negócio
-
-Líderes comerciais e operacionais precisam acompanhar receita, recompra, qualidade da entrega e os responsáveis por cada desvio em um único lugar. A Mercora usa uma data operacional histórica selecionável, portanto os dados de 2016-2018 nunca são apresentados como atuais.
-
-## Fluxo de dados
-
-`CSV Olist -> ingestão Python -> fatos e dimensões no DuckDB -> marts SQL -> aplicação Dash`
-
-Pedidos, itens e pagamentos permanecem em fatos separados. A receita vem dos itens e é agregada antes dos relacionamentos, impedindo que parcelas ou pedidos com vários itens multipliquem valores.
-
-## Áreas da aplicação
-
-- **Command Center:** situação diária, desvios e fila de ação.
-- **Revenue Explorer:** categorias, geografia, vendedores e pagamentos.
-- **Retention:** recompra, coortes, RFM e clientes para recuperação.
-- **Customer Explorer:** histórico e comportamento por identificador anônimo.
-- **Data Trust:** origem, testes, reconciliação e definições das métricas.
+<p align="center">
+  <a href="https://ba9ba428-78e2-4e6e-ac79-8a6dfe44fc99.plotly.app/?lang=pt"><strong>Abrir aplicação pública</strong></a>
+  · <a href="README.md">English</a>
+  · <a href="docs/DEMO_GUIDE.md">Roteiro de 90 segundos</a>
+</p>
 
 ![Command Center da Mercora](docs/images/pt/command.png)
 
-Telas verificadas: [Revenue Explorer](docs/images/pt/revenue.png), [Retenção](docs/images/pt/retention.png), [Customer Explorer](docs/images/pt/customers.png) e [Data Trust](docs/images/pt/trust.png).
+## O desafio de negócio
+
+Líderes de comércio precisam descobrir **o que mudou, quem causou o desvio e onde agir**. Isso é difícil nos arquivos operacionais porque receita, pagamentos, entregas, avaliações e clientes possuem granularidades diferentes.
+
+A Mercora transforma a base anonimizada da Olist em um produto diário que responde:
+
+- Quais categorias, vendedores e regiões estão movendo a receita?
+- Atrasos estão prejudicando a experiência do cliente?
+- Quais grupos de clientes devem entrar na fila de recuperação?
+- É possível confiar nos números e rastrear o cálculo de cada métrica?
+
+## O que a análise encontrou
+
+| Descoberta | Implicação para o negócio |
+|---|---|
+| Pedidos no prazo têm nota média **4,29**, contra **2,57** nos atrasados | Priorizar categorias de alta receita com piora na entrega antes de ampliar aquisição |
+| Apenas **3,04%** dos clientes compraram mais de uma vez | Criar jornadas pós-compra entre 30 e 75 dias depois da entrega |
+| São Paulo gerou **R$ 5,20 milhões** em receita histórica de itens | Comparar regiões por eficiência e experiência, não apenas por volume |
+| Cinco categorias lideram o mix de receita | Monitorar entrega, avaliação e recompra dessas categorias separadamente |
+
+Os resultados são reproduzidos a partir do snapshot e não estão escritos de forma fixa no dashboard. Consulte a [análise completa](docs/INSIGHTS.md).
+
+## Fluxo de decisão
+
+1. **Command Center** identifica desvios e prioridades.
+2. **Revenue Explorer** encontra responsáveis por categoria, geografia, vendedor e pagamento.
+3. **Retention** separa aquisição de recorrência usando coortes e RFM.
+4. **Customer Explorer** chega ao detalhe anonimizado de cliente e pedido.
+5. **Data Trust** apresenta origem, granularidade, reconciliação e definição das métricas.
+
+<p align="center">
+  <img src="docs/images/pt/revenue.png" width="49%" alt="Análise de receita">
+  <img src="docs/images/pt/retention.png" width="49%" alt="Análise de retenção">
+</p>
+
+## Arquitetura e modelagem
+
+```mermaid
+flowchart LR
+    A[Arquivos CSV da Olist] --> B[Validação em Python]
+    B --> C[(Fatos e dimensões no DuckDB)]
+    C --> D[Marts analíticos em SQL]
+    D --> E[Aplicação Dash e Plotly]
+    C --> F[14 testes determinísticos de dados]
+```
+
+Pedidos, itens e pagamentos permanecem em fatos separados. A receita de itens é agregada antes dos relacionamentos de um-para-muitos, impedindo que parcelas ou múltiplos itens multipliquem valores.
+
+**Cobertura do snapshot:** 99.441 pedidos, 96.096 clientes anonimizados e 112.650 itens entre 2016 e 2018. A aplicação sempre identifica o período como histórico.
+
+## Evidências de engenharia
+
+- Pipeline reproduzível de download, construção, validação e execução.
+- Modelo analítico no DuckDB e marts SQL com granularidade explícita.
+- 14 controles de unicidade, integridade, reconciliação, datas e privacidade.
+- 16 testes automatizados para métricas, filtros, drill-down, idiomas, empacotamento e inicialização.
+- Interface em português e inglês com idioma persistente e links diretos.
+- Marts publicados anonimizados; CSVs brutos e dados locais não entram no Git.
+
+Consulte o [modelo de dados](docs/DATA_MODEL.md), [dicionário de métricas](docs/METRIC_DICTIONARY.md), [relatório de qualidade](docs/QA.md) e [guia de publicação](docs/DEPLOYMENT.md).
 
 ## Executar localmente
 
 ```powershell
+git clone https://github.com/victorn198/mercora-commerce-intelligence.git
+cd mercora-commerce-intelligence
+python -m venv .venv
+.venv\Scripts\pip install -r requirements.txt
 copy .env.example .env
-run.cmd -m pipeline download
-run.cmd -m pipeline build
 run.cmd -m pipeline validate
-run.cmd -m pipeline capture
-run.cmd -m pipeline package
 run.cmd app.py
 ```
 
-Acesse `http://127.0.0.1:8050`.
-
-## Testes
-
-```powershell
-run.cmd -m pytest
-```
-
-O pipeline possui 14 verificações determinísticas de qualidade, incluindo reconciliação de receita, integridade referencial, limites históricos e ausência de colunas sensíveis. A suíte cobre métricas, filtros, drill-down, internacionalização, empacotamento e inicialização da aplicação.
+Acesse `http://127.0.0.1:8050`. O repositório inclui o snapshot analítico anonimizado necessário para a demonstração.
 
 ## Dados e licença
 
-A fonte é o [Olist Brazilian E-Commerce Public Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce), licenciado sob CC BY-NC-SA 4.0. Os CSVs brutos não entram no controle de versão. Os artefatos publicados contêm somente marts analíticos anônimos e continuam sujeitos à licença da fonte. Este portfólio é não comercial e não possui vínculo com a Olist.
-
-Consulte o [dicionário de métricas](docs/METRIC_DICTIONARY.md), o [modelo de dados](docs/DATA_MODEL.md), os [insights](docs/INSIGHTS.md), o [roteiro de demonstração e entrevista](docs/DEMO_GUIDE.md) e o [guia de publicação](docs/DEPLOYMENT.md).
+A fonte analítica é o [Olist Brazilian E-Commerce Public Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce), licenciado sob CC BY-NC-SA 4.0. Este portfólio não comercial não possui vínculo com a Olist. O código usa licença MIT; os artefatos derivados continuam sujeitos à licença da fonte.
