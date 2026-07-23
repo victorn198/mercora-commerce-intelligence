@@ -265,13 +265,16 @@ button, input { font: inherit; }
 .dash-dropdown-action-button:hover { filter: brightness(.97); }
 .dash-dropdown-options {
   max-height: 220px;
-  padding: 4px 3px 0 0;
+  padding: 4px 3px 12px 0;
   overflow-y: auto !important;
   overscroll-behavior: contain;
+  scroll-padding-block: 4px 12px;
+  touch-action: pan-y;
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: #a9b8cb #f1f4f8;
 }
+.dash-dropdown-option:last-child { margin-bottom: 3px; }
 .dash-dropdown-options::-webkit-scrollbar { width: 9px; }
 .dash-dropdown-options::-webkit-scrollbar-track { background: #f1f4f8; border-radius: 8px; }
 .dash-dropdown-options::-webkit-scrollbar-thumb {
